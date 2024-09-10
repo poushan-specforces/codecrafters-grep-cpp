@@ -13,7 +13,8 @@ bool match_pattern(const std::string &input_line, const std::string &pattern) {
                 return true;
         }
         return false;
-    } else if (pattern[0] == '[' && pattern[pattern.size() - 1] == ']') {
+
+    } else if (pattern[0] == '[' && pattern[pattern.size() - 1] == ']' && pattern[1] != '^') {
         std::unordered_map<char, int> freq;
 
         for (const auto &ch : pattern) {
@@ -26,6 +27,21 @@ bool match_pattern(const std::string &input_line, const std::string &pattern) {
         }
 
         return false;
+
+    } else if (pattern[0] == '[' && pattern[pattern.size() - 1] == ']' && pattern[1] == '^') {
+        std::unordered_map<char, int> freq;
+
+        for (const auto &ch : pattern) {
+            freq[ch]++;
+        }
+
+        for (const auto &ch : input_line) {
+            if (freq[ch] > 0)
+                return false;
+        }
+
+        return true;
+
     } else {
         throw std::runtime_error("Unhandled pattern " + pattern);
     }
