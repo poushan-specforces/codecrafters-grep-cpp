@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 bool match_pattern(const std::string &input_line, const std::string &pattern) {
     if (pattern.length() == 1) {
@@ -11,6 +12,19 @@ bool match_pattern(const std::string &input_line, const std::string &pattern) {
             if (std::isdigit(ch) || std::isalpha(ch))
                 return true;
         }
+        return false;
+    } else if (pattern[0] == '[' && pattern[pattern.size() - 1] == ']') {
+        std::unordered_map<char, int> freq;
+
+        for (const auto &ch : pattern) {
+            freq[ch]++;
+        }
+
+        for (const auto &ch : input_line) {
+            if (freq[ch] > 0)
+                return true;
+        }
+
         return false;
     } else {
         throw std::runtime_error("Unhandled pattern " + pattern);
